@@ -14,5 +14,5 @@ export TARGET_KEYWORD="Kaartdiensten"
 
 T_DIR=${PWD}/tests/trivial
 
-cat  ${T_DIR}/test-plan.jmx 
+cat  ${T_DIR}/test-plan.jmx
 
