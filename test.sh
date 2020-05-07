@@ -10,7 +10,7 @@ export TARGET_PORT="80"
 export TARGET_PATH="/kaarten.html"
 export TARGET_KEYWORD="Kaartdiensten"
 
-T_DIR=tests/trivial
+T_DIR=${PWD}/tests/trivial
 
 # Reporting dir: start fresh
 R_DIR=${T_DIR}/report
