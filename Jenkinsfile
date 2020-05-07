@@ -6,6 +6,9 @@ pipeline {
     options {
         parallelsAlwaysFailFast()
     }
+     environment {
+        NEXUS_ARTIFACT_VERSION= "${env.BUILD_NUMBER}"
+    }
     stages {
         stage('Non-Parallel Stage') {
             steps {
@@ -17,19 +20,27 @@ pipeline {
                    stage('Checkstyle') {
                         steps{
                             // Run the maven build with checkstyle
-                            sh "mvn clean package checkstyle:checkstyle"
+                            sh "mvn -e clean package checkstyle:checkstyle"
                          }
                      }
                     stage('Sonarqube') {
                         steps {
                             withSonarQubeEnv('SonarQube') {
-                            ws('/sonar/workspace'){
-                                sh "mvn  clean package sonar:sonar -Dsonar.host_url=$SONAR_HOST_URL "
+                            sh "mvn -e clean package sonar:sonar -Dsonar.host_url=$SONAR_HOST_URL "
+
                             }
                          }
                     }
-                }
             }
         }
+         stage('Publish in Nexus') {
+            steps {
+                nexusPublisher nexusInstanceId: 'Nexus',
+                nexusRepositoryId: 'releases',
+                packages: [[$class: 'MavenPackage',
+                mavenAssetList: [[classifier: '', extension: '', filePath: 'target/petclinic.war']], mavenCoordinate: [artifactId: 'spring-framework-petclinic', groupId: 'org.springframework.samples', packaging: 'war', version: NEXUS_ARTIFACT_VERSION]]]
+            }
+        }
+
     }
 }
