@@ -41,6 +41,15 @@ pipeline {
                 mavenAssetList: [[classifier: '', extension: '', filePath: 'target/petclinic.war']], mavenCoordinate: [artifactId: 'spring-framework-petclinic', groupId: 'org.springframework.samples', packaging: 'war', version: NEXUS_ARTIFACT_VERSION]]]
             }
         }
+        stage('jmeter') {
+                    steps {
+                      sh "jmeter -Jjmeter.save.saveservice.output_format=xml -Jjmeter.save.saveservice.response_data.on_error=true -n -t tests/trivial/test_petclinic.jmx  -l testresult.jlt"
+                    }
+                }
+
+
+
+
 
     }
 }
